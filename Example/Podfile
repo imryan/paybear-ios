@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'paybear-ios_Example' do
+  pod 'paybear-ios', :path => '../'
+
+  target 'paybear-ios_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
