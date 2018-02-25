@@ -1,4 +1,4 @@
-# paybear-ios
+# 🐻 Paybear iOS
 
 [![CI Status](http://img.shields.io/travis/imryan/paybear-ios.svg?style=flat)](https://travis-ci.org/imryan/paybear-ios)
 [![Version](https://img.shields.io/cocoapods/v/paybear-ios.svg?style=flat)](http://cocoapods.org/pods/paybear-ios)
