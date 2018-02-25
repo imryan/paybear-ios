@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         // Set Paybear API key
-        Paybear.shared.setToken("sec5f23db7e6edcbba5618250ecb15306fe")
+        Paybear.shared.setToken("")
         
         // Get current market prices
         Paybear.shared.getCurrencies(completion: { (currency) in
