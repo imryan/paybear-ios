@@ -9,7 +9,52 @@
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
+## Usage
+
+#### Set Paybear API key
+```swift
+Paybear.shared.setToken("your-api-key")
+```
+
+#### Get current market prices
+```swift
+Paybear.shared.getCurrencies(completion: { (currency) in
+    if let currency = currency {
+        // ...
+    }
+})
+```
+
+#### Get market exchange rates for all cryptocurrencies
+```swift
+Paybear.shared.getMarketRates(fiat: .usd) { (rates) in
+    if let rates = rates {
+        // ...
+    }
+}
+```
+
+#### Get single market exchange rate for cryptocurrency
+```swift
+Paybear.shared.getSingleMarketRate(fiat: .usd, crypto: .btc) { (rate) in
+    if let rate = rate {
+        // ...
+    }
+}
+```
+
+#### Create payment request in given cryptocurrency
+```swift
+Paybear.shared.createPaymentRequest(crypto: .btc, callbackURL: "http://ryans.online") { (request) in
+    if let request = request {
+        // ...
+    }
+}
+```
+
 ## Requirements
+
+* Alamofire
 
 ## Installation
 
@@ -22,7 +67,7 @@ pod 'paybear-ios'
 
 ## Author
 
-imryan, notryancohen@gmail.com
+Ryan Cohen, notryancohen@gmail.com
 
 ## License
 
