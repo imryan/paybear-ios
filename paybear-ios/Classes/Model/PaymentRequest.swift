@@ -7,16 +7,12 @@
 
 import Foundation
 
-open class PaymentRequest: Codable, CustomStringConvertible {
+open class PaymentRequest: Codable {
     
     // MARK: - Attributes
     
     let invoice: String?
     let address: String?
-    
-    public var description: String {
-        return "Invoice: \(invoice)\nAddress: \(address)"
-    }
     
     // MARK: - CodingKeys
     

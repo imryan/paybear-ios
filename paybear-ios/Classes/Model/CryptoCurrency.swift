@@ -7,7 +7,7 @@
 
 import Foundation
 
-open class CryptoCurrency: Codable, CustomStringConvertible {
+open class CryptoCurrency: Codable {
     
     // MARK: - Attributes
     
@@ -23,10 +23,6 @@ open class CryptoCurrency: Codable, CustomStringConvertible {
     
     // https://etherscan.io/address/%s
     // let blockExplorerURL: String?
-    
-    public var description: String {
-        return "Title: \(String(describing: title))\nCode: \(String(describing: code))\nRate: \(String(describing: rate))\nMin: \(String(describing: minimum))\nMax: \(String(describing: maximum))\nDecimals: \(decimals)\nMax confirms: \(String(describing: maxConfirmations))\nMetamask: \(metamask)\nBlock explorer: \(String(describing: blockExplorer))"
-    }
     
     // MARK: - CodingKeys
     

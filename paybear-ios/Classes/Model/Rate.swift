@@ -7,7 +7,7 @@
 
 import Foundation
 
-open class Rate: Codable, CustomStringConvertible {
+open class Rate: Codable {
     
     // MARK: - Attributes
     
@@ -17,10 +17,6 @@ open class Rate: Codable, CustomStringConvertible {
     let bittrex: Double?
     let bitfinex: Double?
     let mid: Double?
-    
-    public var description: String {
-        return "Name: \(name)\nPolinex: \(polinex)\nHitbtc: \(hitbtc)\nBittrex: \(bittrex)\nBitfinex: \(bitfinex)\nMid: \(mid)"
-    }
     
     // MARK: - CodingKeys
     
