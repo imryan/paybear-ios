@@ -8,8 +8,8 @@
 
 Pod::Spec.new do |s|
     s.name             = 'paybear-ios'
-    s.version          = '0.1.0'
-    s.summary          = 'Paybear API'
+    s.version          = '1.0.0'
+    s.summary          = 'Paybear API on iOS'
     
     # This description is used to generate tags and improve search results.
     #   * Think: What does it do? Why did you write it? What is the focus?
@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
     #   * Finally, don't worry about the indent, CocoaPods strips it!
     
     s.description      = <<-DESC
-    TODO: Add long description of the pod here.
+    Utilize the Paybear cryptocurrency checkout API on iOS.
     DESC
     
     s.homepage         = 'https://github.com/imryan/paybear-ios'
@@ -27,14 +27,6 @@ Pod::Spec.new do |s|
     s.source           = { :git => 'https://github.com/imryan/paybear-ios.git', :tag => s.version.to_s }
     
     s.ios.deployment_target = '8.0'
-    
     s.source_files = 'paybear-ios/Classes/**/*'
-    
-    # s.resource_bundles = {
-    #   'paybear-ios' => ['paybear-ios/Assets/*.png']
-    # }
-    
     s.dependency 'Alamofire'
-    # s.public_header_files = 'Pod/Classes/**/*.h'
-    # s.frameworks = 'UIKit', 'MapKit'
 end
