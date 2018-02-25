@@ -46,7 +46,7 @@ open class Paybear {
     /// Get list of current cryptocurrency prices
     ///
     /// - Parameter completion: Array of `Currency` objects
-    open func getCurrencies(completion: @escaping (_ currencies: [Currency]?) -> ()) {
+    open func getCurrencies(completion: @escaping (_ currencies: [CryptoCurrency]?) -> ()) {
         Networking.getCurrencies(completion)
     }
     
