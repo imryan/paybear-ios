@@ -21,6 +21,7 @@ open class CryptoCurrency: Codable {
     let metamask: Bool?
     let blockExplorer: String?
     
+    // TODO: Format wallet address string
     // https://etherscan.io/address/%s
     // let blockExplorerURL: String?
     
