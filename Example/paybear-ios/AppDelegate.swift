@@ -1,21 +1,52 @@
 //
 //  AppDelegate.swift
-//  paybear-ios
+//  Paybear iOS
 //
-//  Created by imryan on 02/24/2018.
-//  Copyright (c) 2018 imryan. All rights reserved.
+//  Created by Ryan Cohen on 02/24/2018.
+//  Copyright (c) 2018 Ryan Cohen. All rights reserved.
 //
 
 import UIKit
+import paybear_ios
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        // Set Paybear API key
+        Paybear.shared.setToken("sec5f23db7e6edcbba5618250ecb15306fe")
+        
+        // Get current market prices
+        Paybear.shared.getCurrencies(completion: { (currency) in
+            if let currency = currency {
+                print(currency)
+            }
+        })
+        
+        // Get market exchange rates for all cryptocurrencies
+        Paybear.shared.getMarketRates(fiat: .usd) { (rates) in
+            if let rates = rates {
+                print(rates)
+            }
+        }
+
+        // Get single market exchange rate for cryptocurrency
+        Paybear.shared.getSingleMarketRate(fiat: .usd, crypto: .btc) { (rate) in
+            if let rate = rate {
+                print(rate)
+            }
+        }
+
+        // Create payment request in given cryptocurrency
+        Paybear.shared.createPaymentRequest(crypto: .btc, callbackURL: "http://ryans.online") { (request) in
+            if let request = request {
+                print(request)
+            }
+        }
+        
         return true
     }
 
@@ -40,7 +71,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-
-
 }
-

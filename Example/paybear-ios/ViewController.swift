@@ -1,9 +1,9 @@
 //
 //  ViewController.swift
-//  paybear-ios
+//  Paybear iOS
 //
-//  Created by imryan on 02/24/2018.
-//  Copyright (c) 2018 imryan. All rights reserved.
+//  Created by Ryan Cohen on 02/24/2018.
+//  Copyright (c) 2018 Ryan Cohen. All rights reserved.
 //
 
 import UIKit
@@ -19,6 +19,5 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
 }
 
