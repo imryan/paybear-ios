@@ -12,17 +12,17 @@ class Networking {
     
     // MARK: - Requests
     
-    static func getCurrencies(_ completion: @escaping (_ currencies: [Currency]?) -> ()) {
+    static func getCurrencies(_ completion: @escaping (_ currencies: [CryptoCurrency]?) -> ()) {
         guard let token = Paybear.shared.token else { completion(nil); return }
         let url = "\(Constants.BASE_URL)/currencies?token=\(token)"
         
         get(url) { (dict) in
             guard let dict = dict as? Dictionary<String, Dictionary<String, Any>> else { completion(nil); return }
-            var currencies: [Currency] = []
+            var currencies: [CryptoCurrency] = []
             
             dict.forEach({ (key, val) in
                 let currencyData = try? JSONSerialization.data(withJSONObject: val, options: [])
-                if let currency = try? JSONDecoder().decode(Currency.self, from: currencyData!) {
+                if let currency = try? JSONDecoder().decode(CryptoCurrency.self, from: currencyData!) {
                     currencies.append(currency)
                 }
             })
