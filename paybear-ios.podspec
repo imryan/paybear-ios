@@ -21,7 +21,6 @@ Pod::Spec.new do |s|
     s.source           = { :git => 'https://github.com/imryan/paybear-ios.git', :tag => s.version.to_s }
     
     s.ios.deployment_target = '8.0'
-    s.swift_version = '4.0'
     s.source_files = 'paybear-ios/Classes/**/*'
     s.dependency 'Alamofire'
 end
