@@ -54,7 +54,7 @@ open class Paybear {
     ///
     /// - Parameters:
     ///   - fiat: Fiat currency type
-    ///   - crypto: Crypocurrency type
+    ///   - crypto: Cryptocurrency type
     ///   - completion: Array of `Rate` objects
     open func getMarketRates(fiat: PaybearCurrencyType, completion: @escaping (_ rate: [Rate]?) -> ()) {
         Networking.getMarketRates(fiat: fiat.rawValue, completion: completion)
@@ -64,7 +64,7 @@ open class Paybear {
     ///
     /// - Parameters:
     ///   - fiat: Fiat currency type
-    ///   - crypto: Crypocurrency type
+    ///   - crypto: Cryptocurrency type
     ///   - completion: `Rate` object
     open func getSingleMarketRate(fiat: PaybearCurrencyType, crypto: PaybearCryptoCurrencyType,
                                   completion: @escaping (_ rate: Rate?) -> ()) {
