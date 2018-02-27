@@ -46,7 +46,7 @@ open class Paybear {
     /// Get list of current cryptocurrency prices
     ///
     /// - Parameter completion: Array of `Currency` objects
-    open func getCurrencies(completion: @escaping (_ currencies: [CryptoCurrency]?) -> ()) {
+    open func getCurrencies(completion: @escaping Callbacks.GetCurrencies) {
         Networking.getCurrencies(completion)
     }
     
@@ -56,7 +56,7 @@ open class Paybear {
     ///   - fiat: Fiat currency type
     ///   - crypto: Cryptocurrency type
     ///   - completion: Array of `Rate` objects
-    open func getMarketRates(fiat: PaybearCurrencyType, completion: @escaping (_ rate: [Rate]?) -> ()) {
+    open func getMarketRates(fiat: PaybearCurrencyType, completion: @escaping Callbacks.GetMarketRates) {
         Networking.getMarketRates(fiat: fiat.rawValue, completion: completion)
     }
     
@@ -67,7 +67,7 @@ open class Paybear {
     ///   - crypto: Cryptocurrency type
     ///   - completion: `Rate` object
     open func getSingleMarketRate(fiat: PaybearCurrencyType, crypto: PaybearCryptoCurrencyType,
-                                  completion: @escaping (_ rate: Rate?) -> ()) {
+                                  completion: @escaping Callbacks.GetMarketRateSingle) {
         
         Networking.getSingleMarketRate(fiat: fiat.rawValue, crypto: crypto.rawValue, completion: completion)
     }
@@ -79,7 +79,7 @@ open class Paybear {
     ///   - callbackURL: Your server callback url (url encoded)
     ///   - completion: `PaymentRequest` object
     open func createPaymentRequest(crypto: PaybearCryptoCurrencyType,
-                                   callbackURL: String, completion: @escaping (_ request: PaymentRequest?) -> ()) {
+                                   callbackURL: String, completion: @escaping Callbacks.GetPaymentRequest) {
         
         Networking.createPaymentRequest(crypto: crypto.rawValue, callbackURL: callbackURL, completion: completion)
     }
