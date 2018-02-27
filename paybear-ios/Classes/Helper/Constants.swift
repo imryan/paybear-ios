@@ -7,11 +7,9 @@
 
 import Foundation
 
-class Constants {
+open class Constants {
     
-    // MARK: - Defaults
-    
-    /// API version
+    /// Latest API version
     private static let API_VERSION = "v2"
     
     /// Base URL
