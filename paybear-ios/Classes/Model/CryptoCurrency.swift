@@ -11,15 +11,15 @@ open class CryptoCurrency: Codable {
     
     // MARK: - Attributes
     
-    let title: String?
-    let code: String?
-    let rate: Double?
-    let minimum: Double?
-    let maximum: Double?
-    let decimals: Int?
-    let maxConfirmations: Int?
-    let metamask: Bool?
-    let blockExplorer: String?
+    public let title: String?
+    public let code: String?
+    public let rate: Double?
+    public let minimum: Double?
+    public let maximum: Double?
+    public let decimals: Int?
+    public let maxConfirmations: Int?
+    public let metamask: Bool?
+    public let blockExplorer: String?
     
     // TODO: Format wallet address string
     // https://etherscan.io/address/%s
