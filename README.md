@@ -18,8 +18,8 @@ Paybear.shared.setToken("your-api-key")
 
 #### Get current market prices
 ```swift
-Paybear.shared.getCurrencies(completion: { (currencies) in
-    if let currencies = currencies {
+Paybear.shared.getCurrencies(completion: { (currencies, error) in
+    if let currencies = currencies, error == nil {
         // Array of currency. Nice
     }
 })
@@ -27,8 +27,8 @@ Paybear.shared.getCurrencies(completion: { (currencies) in
 
 #### Get market exchange rates for all cryptocurrencies
 ```swift
-Paybear.shared.getMarketRates(fiat: .usd) { (rates) in
-    if let rates = rates {
+Paybear.shared.getMarketRates(fiat: .usd) { (rates, error) in
+    if let rates = rates, error == nil {
         // ...
     }
 }
@@ -36,8 +36,8 @@ Paybear.shared.getMarketRates(fiat: .usd) { (rates) in
 
 #### Get single market exchange rate for cryptocurrency
 ```swift
-Paybear.shared.getSingleMarketRate(fiat: .usd, crypto: .btc) { (rate) in
-    if let rate = rate {
+Paybear.shared.getSingleMarketRate(fiat: .usd, crypto: .btc) { (rate, error) in
+    if let rate = rate, error == nil {
         // ...
     }
 }
@@ -45,8 +45,8 @@ Paybear.shared.getSingleMarketRate(fiat: .usd, crypto: .btc) { (rate) in
 
 #### Create payment request in given cryptocurrency
 ```swift
-Paybear.shared.createPaymentRequest(crypto: .btc, callbackURL: "http://ryans.online") { (request) in
-    if let request = request {
+Paybear.shared.createPaymentRequest(crypto: .btc, callbackURL: "http://ryans.online") { (request, error) in
+    if let request = request, error == nil {
         // ...
     }
 }
