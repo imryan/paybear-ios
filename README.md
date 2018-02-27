@@ -20,7 +20,7 @@ Paybear.shared.setToken("your-api-key")
 ```swift
 Paybear.shared.getCurrencies(completion: { (currencies) in
     if let currencies = currencies {
-        // Array of currencies. Nice
+        // Array of currency. Nice
     }
 })
 ```
