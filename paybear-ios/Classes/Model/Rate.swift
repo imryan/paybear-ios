@@ -11,12 +11,12 @@ open class Rate: Codable {
     
     // MARK: - Attributes
     
-    let name: String?
-    let polinex: Double?
-    let hitbtc: Double?
-    let bittrex: Double?
-    let bitfinex: Double?
-    let mid: Double?
+    public let name: String?
+    public let polinex: Double?
+    public let hitbtc: Double?
+    public let bittrex: Double?
+    public let bitfinex: Double?
+    public let mid: Double?
     
     // MARK: - CodingKeys
     

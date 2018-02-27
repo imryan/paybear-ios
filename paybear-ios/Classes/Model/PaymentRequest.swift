@@ -11,8 +11,8 @@ open class PaymentRequest: Codable {
     
     // MARK: - Attributes
     
-    let invoice: String?
-    let address: String?
+    public let invoice: String?
+    public let address: String?
     
     // MARK: - CodingKeys
     
