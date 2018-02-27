@@ -11,8 +11,8 @@ open class Rate: Codable {
     
     // MARK: - Attributes
     
-    public let name: String?
-    public let polinex: Double?
+    public var name: String?
+    public let poloniex: Double?
     public let hitbtc: Double?
     public let bittrex: Double?
     public let bitfinex: Double?
@@ -22,7 +22,7 @@ open class Rate: Codable {
     
     private enum CodingKeys: CodingKey {
         case name
-        case polinex
+        case poloniex
         case hitbtc
         case bittrex
         case bitfinex
