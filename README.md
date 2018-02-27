@@ -18,9 +18,9 @@ Paybear.shared.setToken("your-api-key")
 
 #### Get current market prices
 ```swift
-Paybear.shared.getCurrencies(completion: { (currency) in
-    if let currency = currency {
-        // ...
+Paybear.shared.getCurrencies(completion: { (currencies) in
+    if let currencies = currencies {
+        // Array of currencies. Nice
     }
 })
 ```
