@@ -1,12 +1,14 @@
 import UIKit
 import XCTest
-import paybear_ios
+@testable import paybear_ios
 
 class Tests: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        
+        // Set Paybear API token
+        Paybear.shared.setToken("pub9f2d5e3db59b6db40b57f83d9a33437f")
     }
     
     override func tearDown() {
@@ -14,15 +16,24 @@ class Tests: XCTestCase {
         super.tearDown()
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        XCTAssert(true, "Pass")
-    }
+    //    func testSetToken() {
+    //        // This is an example of a functional test case.
+    //        Paybear.shared.setToken("123")
+    //        XCTAssert(Paybear.shared.token != nil)
+    //    }
     
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure() {
-            // Put the code you want to measure the time of here.
+    func testGetCurrencies() {
+        let expectation = XCTestExpectation(description: "Should get all currencies")
+        
+        Paybear.shared.getCurrencies { (currencies, error) in
+            expectation.fulfill()
+            if let currencies = currencies, error == nil {
+                for currency in currencies {
+                    
+                }
+            }
         }
+        
+        wait(for: [expectation], timeout: 10)
     }
 }

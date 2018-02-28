@@ -20,28 +20,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Paybear.shared.setToken("")
         
         // Get current market prices
-        Paybear.shared.getCurrencies(completion: { (currency) in
-            if let currency = currency {
-                print(currency)
+        Paybear.shared.getCurrencies(completion: { (currencies, error) in
+            if let currencies = currencies {
+                print(currencies)
             }
         })
         
         // Get market exchange rates for all cryptocurrencies
-        Paybear.shared.getMarketRates(fiat: .usd) { (rates) in
+        Paybear.shared.getMarketRates(fiat: .usd) { (rates, error) in
             if let rates = rates {
                 print(rates)
             }
         }
 
         // Get single market exchange rate for cryptocurrency
-        Paybear.shared.getSingleMarketRate(fiat: .usd, crypto: .btc) { (rate) in
+        Paybear.shared.getSingleMarketRate(fiat: .usd, crypto: .btc) { (rate, error) in
             if let rate = rate {
                 print(rate)
             }
         }
 
         // Create payment request in given cryptocurrency
-        Paybear.shared.createPaymentRequest(crypto: .btc, callbackURL: "http://ryans.online") { (request) in
+        Paybear.shared.createPaymentRequest(crypto: .btc, callbackURL: "http://ryans.online") { (request, error) in
             if let request = request {
                 print(request)
             }
