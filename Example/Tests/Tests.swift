@@ -1,5 +1,6 @@
 import UIKit
 import XCTest
+import paybear_ios
 
 class Tests: XCTestCase {
     
