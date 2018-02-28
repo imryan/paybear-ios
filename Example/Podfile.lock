@@ -1,0 +1,19 @@
+PODS:
+  - Alamofire (4.6.0)
+  - paybear-ios (1.0.1):
+    - Alamofire
+
+DEPENDENCIES:
+  - paybear-ios (from `../`)
+
+EXTERNAL SOURCES:
+  paybear-ios:
+    :path: ../
+
+SPEC CHECKSUMS:
+  Alamofire: f41a599bd63041760b26d393ec1069d9d7b917f4
+  paybear-ios: 7ee480fd2ed941e9d0b1585ffa54dac4ebd5fe69
+
+PODFILE CHECKSUM: f5c2e199efaa2e8214a0f66a5c24958d4b98cc25
+
+COCOAPODS: 1.4.0
