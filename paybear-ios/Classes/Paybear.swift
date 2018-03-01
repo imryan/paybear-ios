@@ -44,13 +44,14 @@ open class Paybear {
     // MARK: - Requests
     
     /// Get list of current cryptocurrency prices
+    /// API token required
     ///
     /// - Parameter completion: Array of `Currency` objects
     open func getCurrencies(completion: @escaping Callbacks.GetCurrencies) {
         Networking.getCurrencies(completion)
     }
     
-    /// Get market exchange rate (fiat -> crypto) for all cryptocurrencies
+    /// Get market exchange rates for all cryptocurrencies
     ///
     /// - Parameters:
     ///   - fiat: Fiat currency type
@@ -60,7 +61,7 @@ open class Paybear {
         Networking.getMarketRates(fiat: fiat.rawValue, completion: completion)
     }
     
-    /// Get single market exhchange rate (fiat -> crypto)
+    /// Get single market exchange rate for one cryptocurrency
     ///
     /// - Parameters:
     ///   - fiat: Fiat currency type
@@ -73,6 +74,7 @@ open class Paybear {
     }
     
     /// Create payment request
+    /// API token required
     ///
     /// - Parameters:
     ///   - crypto: Cryptocurrency to accept (eth, btc, bch, ltc, dash, btg, etc)
