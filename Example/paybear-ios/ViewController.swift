@@ -14,68 +14,78 @@ class ViewController: UIViewController {
     // MARK: Attributes
     
     @IBOutlet weak var tableView: UITableView!
+    private var refreshControl: UIRefreshControl!
     
-    var currencies: [CryptoCurrency] = []
-    var rates: [Rate] = []
+    private var currencies: [CryptoCurrency] = [] {
+        didSet {
+            reloadTable()
+        }
+    }
+    
+    private var rates: [MarketRate] = [] {
+        didSet {
+            reloadTable()
+        }
+    }
     
     // MARK: - Paybear
     
-    func getCurrencies() {
+    private func getCurrencies() {
         Paybear.shared.getCurrencies { (currencies, error) in
             if let currencies = currencies, error == nil {
                 self.currencies = currencies
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-            } else {
-                print("Currencies: \(currencies!) | Err: \(error?.localizedDescription)")
             }
         }
     }
     
-    func getMarketRates() {
+    private func getMarketRates() {
         Paybear.shared.getMarketRates(fiat: .usd) { (rates, error) in
             if let rates = rates, error == nil {
                 self.rates = rates
+            }
+        }
+    }
+    
+    private func createPaymentRequest() {
+        Paybear.shared.createPaymentRequest(crypto: .btc, callbackURL: "http://ryans.online") { (request, error) in
+            if let request = request, error == nil {
+                let alert = UIAlertController(title: "Payment Request", message: "Invoice #:\(request.invoice!)\nAddress: #\(request.address!)", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: nil))
+                
                 DispatchQueue.main.async {
-                    self.tableView.reloadData()
+                    self.present(alert, animated: true, completion: nil)
                 }
             }
         }
     }
     
-    //
-    // // Get market exchange rates for all cryptocurrencies
-    // Paybear.shared.getMarketRates(fiat: .usd) { (rates) in
-    //     if let rates = rates {
-    //         print(rates)
-    //     }
-    // }
-    //
-    // // Get single market exchange rate for cryptocurrency
-    // Paybear.shared.getSingleMarketRate(fiat: .usd, crypto: .btc) { (rate) in
-    //     if let rate = rate {
-    //         print(rate)
-    //     }
-    // }
-    //
-    // // Create payment request in given cryptocurrency
-    // Paybear.shared.createPaymentRequest(crypto: .btc, callbackURL: "http://ryans.online") { (request) in
-    //     if let request = request {
-    //         print(request)
-    //     }
-    // }
+    // MARK: - Functions
+    
+    @objc private func fetchData() {
+        // Fetch currency list
+        getCurrencies()
+        
+        // Fetch market rates
+        getMarketRates()
+    }
     
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Fetch currency list
-        getCurrencies()
+        // Set API key and fetch data
+        Paybear.shared.setToken("pub9f2d5e3db59b6db40b57f83d9a33437f")
+        fetchData()
         
-        // Fetch market rates
-        getMarketRates()
+        // Add refresh control
+        if #available(iOS 10, *) {
+            refreshControl = UIRefreshControl()
+            refreshControl.addTarget(self, action: #selector(fetchData), for: .valueChanged)
+            self.tableView.addSubview(refreshControl)
+        } else {
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(fetchData))
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -89,6 +99,10 @@ class ViewController: UIViewController {
 extension ViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == 2 {
+            createPaymentRequest()
+        }
+        
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }
@@ -98,7 +112,7 @@ extension ViewController: UITableViewDelegate {
 extension ViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 3
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -107,6 +121,8 @@ extension ViewController: UITableViewDataSource {
             return currencies.count
         case 1:
             return rates.count
+        case 2:
+            return 1
         default:
             return 0
         }
@@ -118,6 +134,8 @@ extension ViewController: UITableViewDataSource {
             return "Currencies"
         case 1:
             return "Rates"
+        case 2:
+            return "Payment"
         default:
             return nil
         }
@@ -130,13 +148,30 @@ extension ViewController: UITableViewDataSource {
             let currency = currencies[indexPath.row]
             cell.textLabel?.text = "\(currency.title!) (\(currency.code!))"
             cell.detailTextLabel?.text = "$\(currency.rate!)"
+            cell.accessoryType = .none
         }
         else if indexPath.section == 1 {
             let rate = rates[indexPath.row]
             cell.textLabel?.text = "\(rate.name ?? "N/A")"
-            cell.detailTextLabel?.text = "Polinex: $\(rate.poloniex ?? 0.0)"
+            cell.detailTextLabel?.text = "Bitfinex: $\(rate.bitfinex ?? 0.0)"
+            cell.accessoryType = .none
+        }
+        else {
+            cell.textLabel?.text = "Create Payment Request"
+            cell.accessoryType = .disclosureIndicator
+            cell.detailTextLabel?.text = ""
         }
         
         return cell
+    }
+    
+    private func reloadTable() {
+        DispatchQueue.main.async {
+            self.tableView.beginUpdates()
+            self.tableView.reloadSections(IndexSet.init(integersIn: 0...2), with: .automatic)
+            self.tableView.endUpdates()
+            
+            self.refreshControl.endRefreshing()
+        }
     }
 }
