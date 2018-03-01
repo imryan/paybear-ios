@@ -4,6 +4,7 @@
 [![Version](https://img.shields.io/cocoapods/v/paybear-ios.svg?style=flat)](http://cocoapods.org/pods/paybear-ios)
 [![License](https://img.shields.io/cocoapods/l/paybear-ios.svg?style=flat)](http://cocoapods.org/pods/paybear-ios)
 [![Platform](https://img.shields.io/cocoapods/p/paybear-ios.svg?style=flat)](http://cocoapods.org/pods/paybear-ios)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
 ## Example
 
