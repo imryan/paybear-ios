@@ -75,7 +75,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         // Set API key and fetch data
-        Paybear.shared.setToken("pub9f2d5e3db59b6db40b57f83d9a33437f")
+        Paybear.shared.setToken("")
         fetchData()
         
         // Add refresh control
