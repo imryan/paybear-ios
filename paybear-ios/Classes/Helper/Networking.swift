@@ -59,9 +59,9 @@ class Networking {
     }
     
     static func getSingleMarketRate(fiat: String, crypto: String, completion: @escaping Callbacks.GetMarketRateSingle) {
-        let endpoint = "exchange/\(fiat)/rate"
+        let endpoint = "\(crypto)/exchange/\(fiat)/rate"
         get(endpoint) { (dict, error) in
-            guard let dict = dict as? Dictionary<String, Dictionary<String, Any>>, error == nil else {
+            guard let dict = dict, error == nil else {
                 completion(nil, error)
                 return
             }
@@ -117,7 +117,7 @@ extension Networking {
                     return
                 }
                 
-                // Check success
+                // Check success key
                 if let success = json["success"] as? Bool {
                     if success == false {
                         if let errors = json["errors"] as? [[String : Any]] {
@@ -131,8 +131,9 @@ extension Networking {
                     }
                 }
                 
-                // Nested JSON objects
-                if let dataContents = json["data"] as? [String : [String : Any]] {
+                // Check data key
+                // if let dataContents = json["data"] as? [String : [String : Any]] {
+                if let dataContents = json["data"] as? [String : Any] {
                     completion(dataContents, nil)
                     return
                 } else {
