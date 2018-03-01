@@ -44,6 +44,7 @@ open class Paybear {
     // MARK: - Requests
     
     /// Get list of current cryptocurrency prices
+    /// API token required
     ///
     /// - Parameter completion: Array of `Currency` objects
     open func getCurrencies(completion: @escaping Callbacks.GetCurrencies) {
@@ -73,6 +74,7 @@ open class Paybear {
     }
     
     /// Create payment request
+    /// API token required
     ///
     /// - Parameters:
     ///   - crypto: Cryptocurrency to accept (eth, btc, bch, ltc, dash, btg, etc)

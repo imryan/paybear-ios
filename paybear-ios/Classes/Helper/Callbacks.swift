@@ -13,10 +13,10 @@ open class Callbacks {
     public typealias GetCurrencies = (_ currencies: [CryptoCurrency]?, _ error: Error?) -> Void
     
     /// Returns an array of `Rate` objects and/or an `Error`
-    public typealias GetMarketRates = (_ rate: [Rate]?, _ error: Error?) -> Void
+    public typealias GetMarketRates = (_ rate: [MarketRate]?, _ error: Error?) -> Void
     
     /// Returns a `Rate` object and/or an `Error`
-    public typealias GetMarketRateSingle = (_ rate: Rate?, _ error: Error?) -> Void
+    public typealias GetMarketRateSingle = (_ rate: MarketRate?, _ error: Error?) -> Void
     
     /// Returns a `PaymentRequest` objects and/or an `Error`
     public typealias GetPaymentRequest = (_ request: PaymentRequest?, _ error: Error?) -> Void
