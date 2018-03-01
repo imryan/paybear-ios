@@ -7,7 +7,7 @@
 
 import Foundation
 
-open class Rate: Codable {
+open class MarketRate: Codable {
     
     // MARK: - Attributes
     
