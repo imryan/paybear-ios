@@ -5,6 +5,8 @@ target 'paybear-ios_Example' do
 
   target 'paybear-ios_Tests' do
     inherit! :search_paths
-    
+    pod 'paybear-ios', :path => '../'
+    pod 'Quick'
+    pod 'Nimble'
   end
 end
