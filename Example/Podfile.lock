@@ -1,10 +1,14 @@
 PODS:
   - Alamofire (4.6.0)
+  - Nimble (7.0.3)
   - paybear-ios (1.0.1):
     - Alamofire
+  - Quick (1.2.0)
 
 DEPENDENCIES:
+  - Nimble
   - paybear-ios (from `../`)
+  - Quick
 
 EXTERNAL SOURCES:
   paybear-ios:
@@ -12,8 +16,10 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Alamofire: f41a599bd63041760b26d393ec1069d9d7b917f4
+  Nimble: 7f5a9c447a33002645a071bddafbfb24ea70e0ac
   paybear-ios: 7ee480fd2ed941e9d0b1585ffa54dac4ebd5fe69
+  Quick: 58d203b1c5e27fff7229c4c1ae445ad7069a7a08
 
-PODFILE CHECKSUM: f5c2e199efaa2e8214a0f66a5c24958d4b98cc25
+PODFILE CHECKSUM: 01fe407014fbf7f8a02ff536f0365ebd585fe5a8
 
 COCOAPODS: 1.4.0
