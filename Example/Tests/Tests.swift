@@ -61,7 +61,7 @@ class Tests: QuickSpec {
             }
             
             describe("create a payment request") {
-                it("create a payment request") {
+                it("should create a payment request") {
                     waitUntil(action: { (done) in
                         Paybear.shared.createPaymentRequest(crypto: .btc, callbackURL: "http://ryans.online", completion: { (request, error) in
                             if let request = request, error == nil {
@@ -69,6 +69,30 @@ class Tests: QuickSpec {
                                 expect(request.address).toNot(beNil())
                                 done()
                             }
+                        })
+                    })
+                }
+            }
+            
+            describe("login user") {
+                it("should login a user and return a token") {
+                    waitUntil(action: { (done) in
+                        Paybear.shared.login(email: "notryancohen@gmail.com", password: "Chuckies12") { (token, error) in
+                            if let token = token, error == nil {
+                                expect(token).toNot(beEmpty())
+                                expect(error).to(beNil())
+                                done()
+                            }
+                        }
+                    })
+                }
+            }
+            
+            describe("two-factor authentication") {
+                it("should prove it can send a two-factor auth code") {
+                    waitUntil(action: { (done) in
+                        Paybear.shared.loginTwoFactor(code: "12345", completion: { (success) in
+                            done()
                         })
                     })
                 }

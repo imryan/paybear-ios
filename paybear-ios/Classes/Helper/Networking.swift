@@ -97,14 +97,69 @@ class Networking {
             completion(nil, error)
         }
     }
+    
+    // MARK: - User
+    
+    static func login(email: String, password: String, completion: @escaping Callbacks.LoginTokenResult) {
+        let url = URL(string: "\(Constants.API_MEMBERS_BASE_URL)/auth/login")!
+        let parameters = ["email" : email, "password" : password]
+        
+        Alamofire.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: nil)
+            .responseJSON { (data) in
+                
+            guard let json = data.value as? [String : Any] else { completion(nil, nil); return }
+            
+            if let success = json["success"] as? Bool {
+                if success {
+                    if let token = json["token"] as? String {
+                        // Store token for use in requests
+                        LoginHelper.shared.store(token: token)
+                        completion(token, nil)
+                        return
+                    }
+                } else {
+                    if let description = json["error"] as? String {
+                        completion(nil, error(description, code: -4))
+                        return
+                    }
+                }
+            }
+            
+            completion(nil, data.error)
+        }
+    }
+    
+    static func loginTwoFactor(code: String, completion: @escaping Callbacks.LoginTwoFactorResult) {
+        guard let token = LoginHelper.shared.token else { completion(false); return }
+        
+        let url = URL(string: "\(Constants.API_MEMBERS_BASE_URL)/auth/login/token2fa")!
+        let parameters = ["code" : code]
+        let headers = ["authorization" : "JWT \(token)"]
+        
+        Alamofire.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+            .responseJSON { (data) in
+                
+            guard let json = data.value as? [String : Any] else { completion(false); return }
+                
+            if let success = json["success"] as? Bool, let data = json["data"] as? Bool {
+                if success && data {
+                    completion(true)
+                    return
+                }
+            }
+            
+            completion(false)
+        }
+    }
 }
 
-// MARK: - Helpers
+// MARK: - Request Helpers
 
 extension Networking {
     
     static func get(_ endpoint: String, completion: @escaping (_ data: Any?, _ error: Error?) -> ()) {
-        var url = "\(Constants.BASE_URL)/\(endpoint)"
+        var url = "\(Constants.API_BASE_URL)/\(endpoint)"
+        
         if tokenExists() {
             url.append("?token=\(Paybear.shared.token!)")
         }
@@ -117,22 +172,12 @@ extension Networking {
                     return
                 }
                 
-                // Check success key
-                if let success = json["success"] as? Bool {
-                    if success == false {
-                        if let errors = json["errors"] as? [[String : Any]] {
-                            if let message = errors.first?["message"] as? String {
-                                completion(nil, error(message, code: -2))
-                                return
-                            }
-                        }
-                        completion(nil, nil)
-                        return
-                    }
+                // Check for errors in response
+                if let error = error(inJSON: json) {
+                    completion(nil, error)
                 }
                 
-                // Check data key
-                // if let dataContents = json["data"] as? [String : [String : Any]] {
+                // Check data key for nested JSON 
                 if let dataContents = json["data"] as? [String : Any] {
                     completion(dataContents, nil)
                     return
@@ -150,8 +195,20 @@ extension Networking {
         }
     }
     
-    static func error(_ error: String, code: Int) -> NSError {
-        return  NSError(domain: "io.paybear.Paybear", code: code, userInfo: [NSLocalizedDescriptionKey : error])
+    // MARK: - Helpers
+    
+    static func error(inJSON json: [String : Any]) -> Error? {
+        if let success = json["success"] as? Bool {
+            if success == false {
+                if let errors = json["errors"] as? [[String : Any]] {
+                    if let message = errors.first?["message"] as? String {
+                        return error(message, code: -2)
+                    }
+                }
+            }
+        }
+        
+        return nil
     }
     
     static func tokenExists() -> Bool {
@@ -160,6 +217,11 @@ extension Networking {
                 return true
             }
         }
+        
         return  false
+    }
+    
+    static func error(_ error: String, code: Int) -> NSError {
+        return  NSError(domain: "io.paybear.Paybear", code: code, userInfo: [NSLocalizedDescriptionKey : error])
     }
 }
