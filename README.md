@@ -53,6 +53,24 @@ Paybear.shared.createPaymentRequest(crypto: .btc, callbackURL: "http://ryans.onl
 }
 ```
 
+#### Login a user
+```swift
+Paybear.shared.login(email: "you@paybear.io", password: "password") { (token, error) in
+    if let token = token, error == nil {
+        // We can now make user-based requests with our stored token!
+    }
+}
+```
+
+### Post-login two-factor authentication
+```swift
+Paybear.shared.loginTwoFactor(code: "123456") { (success) in
+    if success {
+        // We have completed the login process
+        // Best to call this function on login completion
+    }
+}
+
 ## Requirements
 
 * Alamofire
