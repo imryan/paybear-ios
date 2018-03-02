@@ -7,7 +7,8 @@ class Tests: QuickSpec {
     
     override func spec() {
         beforeEach {
-            Paybear.shared.setToken("")
+            // Public token. Easy there wise guy
+            Paybear.shared.setToken("pub9f2d5e3db59b6db40b57f83d9a33437f")
         }
         
         describe("fetch currencies") {

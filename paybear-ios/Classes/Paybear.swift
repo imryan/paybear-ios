@@ -11,20 +11,20 @@ open class Paybear {
     // MARK: - Currencies
     
     public enum PaybearCurrencyType: String {
-        case usd = "usd"
-        case eur = "eur"
-        case cad = "cad"
-        case rub = "rub"
+        case usd
+        case eur
+        case cad
+        case rub
     }
     
     public enum PaybearCryptoCurrencyType: String {
-        case btc = "btc"
-        case bch = "bch"
-        case etc = "etc"
-        case eth = "eth"
-        case ltc = "ltc"
-        case btg = "btg"
-        case dash = "dash"
+        case btc
+        case bch
+        case etc
+        case eth
+        case ltc
+        case btg
+        case dash
     }
     
     // MARK: - Attributes
