@@ -70,6 +70,7 @@ Paybear.shared.loginTwoFactor(code: "123456") { (success) in
         // Best to call this function on login completion
     }
 }
+```
 
 ## Requirements
 
