@@ -62,7 +62,7 @@ Paybear.shared.login(email: "you@paybear.io", password: "password") { (token, er
 }
 ```
 
-### Post-login two-factor authentication
+#### Post-login two-factor authentication
 ```swift
 Paybear.shared.loginTwoFactor(code: "123456") { (success) in
     if success {
