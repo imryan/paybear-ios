@@ -41,7 +41,7 @@ open class Paybear {
         self.token = token
     }
     
-    // MARK: - Requests
+    // MARK: - Currency Requests
     
     /// Get list of current cryptocurrency prices
     /// API token required
@@ -84,5 +84,27 @@ open class Paybear {
                                    callbackURL: String, completion: @escaping Callbacks.GetPaymentRequest) {
         
         Networking.createPaymentRequest(crypto: crypto.rawValue, callbackURL: callbackURL, completion: completion)
+    }
+    
+    // MARK: - User Requests
+    
+    /// Login
+    ///
+    /// - Parameters:
+    ///   - email: User's email address
+    ///   - password: User's password
+    ///   - completion: `String` value of authorization token
+    open func login(email: String, password: String, completion: @escaping Callbacks.LoginTokenResult) {
+        Networking.login(email: email, password: password, completion: completion)
+    }
+    
+    /// Complete two-factor authentication
+    /// Authorization token reqired
+    ///
+    /// - Parameters:
+    ///   - code: 6 digit two-factor authentication code
+    ///   - completion: A `Bool` indicating successful authentication
+    open func loginTwoFactor(code: String, completion: @escaping Callbacks.LoginTwoFactorResult) {
+        Networking.loginTwoFactor(code: code, completion: completion)
     }
 }
