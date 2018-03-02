@@ -79,7 +79,6 @@ class ViewController: UIViewController {
                     loginAlert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: nil))
                     
                     if let error = error {
-                        // We've got an error instead
                         loginAlert.message = "Error: \(error.localizedDescription)"
                     }
                     else if let _ = token {
@@ -92,7 +91,7 @@ class ViewController: UIViewController {
                         let twoFactorAction = UIAlertAction(title: "Confirm", style: .default, handler: { (_) in
                             if let code = loginAlert.textFields?.first?.text {
                                 Paybear.shared.loginTwoFactor(code: code, completion: { (success) in
-                                    print(success ? "success" : "FAILED")
+                                    print(success ? "2-factor success!" : "2-factor failed!")
                                 })
                             }
                         })
