@@ -56,6 +56,7 @@ Paybear.shared.createPaymentRequest(crypto: .btc, callbackURL: "http://ryans.onl
 ## Requirements
 
 * Alamofire
+* Quick/Nimble (to run tests only)
 
 ## Installation
 
