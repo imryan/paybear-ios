@@ -18,8 +18,6 @@ open class MarketRate: Codable {
     public let bitfinex: Double?
     public let mid: Double?
     
-    // MARK: - CodingKeys
-    
     private enum CodingKeys: CodingKey {
         case name
         case poloniex

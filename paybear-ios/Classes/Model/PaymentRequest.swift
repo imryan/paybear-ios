@@ -14,8 +14,6 @@ open class PaymentRequest: Codable {
     public let invoice: String?
     public let address: String?
     
-    // MARK: - CodingKeys
-    
     private enum CodingKeys: CodingKey {
         case invoice
         case address

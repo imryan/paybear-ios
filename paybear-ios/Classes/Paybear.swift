@@ -32,6 +32,15 @@ open class Paybear {
     /// Shared instance
     open static let shared = Paybear()
     
+    /// Current user object
+    public var currentUser: User? {
+        if let user = LoginHelper.shared.user {
+            return user
+        }
+        
+        return nil
+    }
+    
     /// Paybear API key
     public var token: String?
     

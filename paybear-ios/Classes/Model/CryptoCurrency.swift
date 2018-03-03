@@ -39,7 +39,7 @@ open class CryptoCurrency: Codable {
 extension CryptoCurrency {
     
     public func blockExplorerURLString() -> String? {
-        guard let user = LoginHelper.shared.user,
+        guard let user = Paybear.shared.currentUser,
             let blockExplorer = blockExplorer,
             let code = code else { return nil }
         
