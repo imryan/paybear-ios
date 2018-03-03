@@ -72,6 +72,15 @@ Paybear.shared.loginTwoFactor(code: "123456") { (success) in
 }
 ```
 
+#### Get user properties
+```swift
+Paybear.shared.getUser(completion: { (user, error) in
+    if let user = user, error == nil {
+        // We've got a valid user object!
+    }
+})
+```
+
 ## Requirements
 
 * Alamofire
