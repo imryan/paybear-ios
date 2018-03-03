@@ -173,6 +173,11 @@ class ViewController: UIViewController {
         } else {
             self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(fetchData))
         }
+        
+        // Add large titles because why not
+        if #available(iOS 11, *) {
+            self.navigationController?.navigationBar.prefersLargeTitles = true
+        }
     }
     
     override func didReceiveMemoryWarning() {
