@@ -77,7 +77,7 @@ class Tests: QuickSpec {
             describe("login user") {
                 it("should login a user and return a token") {
                     waitUntil(action: { (done) in
-                        Paybear.shared.login(email: "", password: "") { (token, error) in
+                        Paybear.shared.login(email: "", password: "", twoFactorDelegate: nil) { (token, error) in
                             if let token = token, error == nil {
                                 expect(token).toNot(beEmpty())
                                 expect(error).to(beNil())

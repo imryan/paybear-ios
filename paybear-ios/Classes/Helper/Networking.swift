@@ -8,6 +8,12 @@
 import Foundation
 import Alamofire
 
+public protocol TwoFactorAuthProtocol {
+    
+    /// Called by `twoFactorDelegate` after login to enter required 2FA code
+    func networkingDidRequestTwoFactorAuthentication()
+}
+
 class Networking {
     
     // MARK: - Requests
@@ -100,7 +106,9 @@ class Networking {
     
     // MARK: - User
     
-    static func login(email: String, password: String, completion: @escaping Callbacks.LoginTokenResult) {
+    static func login(email: String, password: String, twoFactorDelegate: TwoFactorAuthProtocol?,
+                      completion: @escaping Callbacks.LoginTokenResult) {
+        
         let url = URL(string: "\(Constants.API_MEMBERS_BASE_URL)/auth/login")!
         let parameters = ["email" : email, "password" : password]
         
@@ -112,8 +120,10 @@ class Networking {
                 if let success = json["success"] as? Bool {
                     if success {
                         if let token = json["token"] as? String {
-                            // Store token for use in requests
+                            // Store token for use in requests and notify listener of 2FA
                             LoginHelper.shared.store(token: token)
+                            twoFactorDelegate?.networkingDidRequestTwoFactorAuthentication()
+                            
                             completion(token, nil)
                             return
                         }
@@ -180,6 +190,9 @@ class Networking {
                     if let jsonData = try? JSONSerialization.data(withJSONObject: data, options: []) {
                         if let user = try? JSONDecoder().decode(User.self, from: jsonData) {
                             user.wallets = wallets
+
+                            // Assign/update current user
+                            LoginHelper.shared.user = user
                             completion(user, nil)
                         }
                     }
@@ -188,6 +201,22 @@ class Networking {
                 completion(nil, response.error)
         }
     }
+    
+//    static func loginAndFetchUser() {
+//        login(email: "", password: "", twoFactorDelegate: nil) { (token, error) in
+//            guard let token = token, error == nil else { return }
+//
+//            loginTwoFactor(code: "", completion: { (success) in
+//                if success {
+//                    getUser(completion: { (user, error) in
+//                        guard let user = user, error == nil else { return }
+//
+//
+//                    })
+//                }
+//            })
+//        }
+//    }
 }
 
 // MARK: - Request Helpers

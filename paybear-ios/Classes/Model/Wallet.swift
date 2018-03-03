@@ -29,4 +29,3 @@ open class Wallet: Codable {
         case enabled
     }
 }
-

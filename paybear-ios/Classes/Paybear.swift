@@ -41,12 +41,12 @@ open class Paybear {
         self.token = token
     }
     
-    // MARK: - Currency Requests
+    // MARK: - Currency
     
     /// Get list of current cryptocurrency prices
     /// API token required
     ///
-    /// - Parameter completion: Array of `Currency` objects
+    /// - Parameter completion: Array of `Currency` objects or an `Error`
     open func getCurrencies(completion: @escaping Callbacks.GetCurrencies) {
         Networking.getCurrencies(completion)
     }
@@ -56,7 +56,7 @@ open class Paybear {
     /// - Parameters:
     ///   - fiat: Fiat currency type
     ///   - crypto: Cryptocurrency type
-    ///   - completion: Array of `Rate` objects
+    ///   - completion: Array of `Rate` objects or an `Error`
     open func getMarketRates(fiat: PaybearCurrencyType, completion: @escaping Callbacks.GetMarketRates) {
         Networking.getMarketRates(fiat: fiat.rawValue, completion: completion)
     }
@@ -66,7 +66,7 @@ open class Paybear {
     /// - Parameters:
     ///   - fiat: Fiat currency type
     ///   - crypto: Cryptocurrency type
-    ///   - completion: `Rate` object
+    ///   - completion: `Rate` object or an `Error`
     open func getSingleMarketRate(fiat: PaybearCurrencyType, crypto: PaybearCryptoCurrencyType,
                                   completion: @escaping Callbacks.GetMarketRateSingle) {
         
@@ -79,23 +79,26 @@ open class Paybear {
     /// - Parameters:
     ///   - crypto: Cryptocurrency to accept (eth, btc, bch, ltc, dash, btg, etc)
     ///   - callbackURL: Your server callback url (url encoded)
-    ///   - completion: `PaymentRequest` object
+    ///   - completion: `PaymentRequest` object or an `Error`
     open func createPaymentRequest(crypto: PaybearCryptoCurrencyType,
                                    callbackURL: String, completion: @escaping Callbacks.GetPaymentRequest) {
         
         Networking.createPaymentRequest(crypto: crypto.rawValue, callbackURL: callbackURL, completion: completion)
     }
     
-    // MARK: - User Requests
+    // MARK: - User
     
     /// Login
     ///
     /// - Parameters:
     ///   - email: User's email address
     ///   - password: User's password
-    ///   - completion: `String` value of authorization token
-    open func login(email: String, password: String, completion: @escaping Callbacks.LoginTokenResult) {
-        Networking.login(email: email, password: password, completion: completion)
+    ///   - twoFactorDelegate: Optional protocol to receive a callback when 2FA is requested
+    ///   - completion: `String` value of authorization token or an `Error`
+    open func login(email: String, password: String, twoFactorDelegate: TwoFactorAuthProtocol?,
+                    completion: @escaping Callbacks.LoginTokenResult) {
+        
+        Networking.login(email: email, password: password, twoFactorDelegate: twoFactorDelegate, completion: completion)
     }
     
     /// Complete two-factor authentication
@@ -108,6 +111,10 @@ open class Paybear {
         Networking.loginTwoFactor(code: code, completion: completion)
     }
     
+    /// Fetches a `User` object with attributes
+    /// Authorization token reqired
+    ///
+    /// - Parameter completion: `User` object if successful or an `Error`
     open func getUser(completion: @escaping Callbacks.UserResult) {
         Networking.getUser(completion: completion)
     }

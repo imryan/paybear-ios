@@ -9,11 +9,13 @@
 import UIKit
 import paybear_ios
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, TwoFactorAuthProtocol {
     
-    // MARK: Attributes
+    // MARK: IBOutlet
     
     @IBOutlet weak var tableView: UITableView!
+    
+    // MARK: Attributes
     
     private var refreshControl: UIRefreshControl!
     
@@ -64,7 +66,7 @@ class ViewController: UIViewController {
     private func createPaymentRequest() {
         Paybear.shared.createPaymentRequest(crypto: .btc, callbackURL: "http://ryans.online") { (request, error) in
             if let request = request, error == nil {
-                let alert = UIAlertController(title: "Payment Request", message: "Invoice #:\(request.invoice!)\nAddress: #\(request.address!)", preferredStyle: .alert)
+                let alert = UIAlertController(title: "Payment Request", message: "Invoice\n\(request.invoice!)\nAddress\n\(request.address!)", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: nil))
                 
                 DispatchQueue.main.async {
@@ -75,7 +77,7 @@ class ViewController: UIViewController {
     }
     
     private func login(email: String, password: String) {
-        Paybear.shared.login(email: email, password: password, completion: { (token, error) in
+        Paybear.shared.login(email: email, password: password, twoFactorDelegate: self, completion: { (token, error) in
             let alert = UIAlertController(title: "Paybear", message: nil, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: nil))
             
@@ -87,30 +89,6 @@ class ViewController: UIViewController {
                 })
                 
                 alert.addAction(retryAction)
-            }
-            else if let _ = token {
-                // Enter Two-factor token
-                alert.addTextField(configurationHandler: { (textField) in
-                    textField.placeholder = "2-factor authentication code"
-                    textField.keyboardType = .numberPad
-                })
-                
-                // Two-factor action
-                let twoFactorAction = UIAlertAction(title: "Confirm", style: .default, handler: { (_) in
-                    if let code = alert.textFields?.first?.text {
-                        Paybear.shared.loginTwoFactor(code: code, completion: { (success) in
-                            if success {
-                                self.getUser()
-                                alert.dismiss(animated: true, completion: nil)
-                            } else {
-                                // Retry two-factor code
-                                self.login(email: email, password: password)
-                            }
-                        })
-                    }
-                })
-                
-                alert.addAction(twoFactorAction)
             }
             
             DispatchQueue.main.async {
@@ -140,6 +118,40 @@ class ViewController: UIViewController {
         }
         
         alert.addAction(loginAction)
+        
+        DispatchQueue.main.async {
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    // MARK: - TwoFactorAuthProtocol
+    
+    func networkingDidRequestTwoFactorAuthentication() {
+        let alert = UIAlertController(title: "2FA", message: "Enter your 6 digit 2FA code", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        
+        // Add 2FA field
+        alert.addTextField(configurationHandler: { (textField) in
+            textField.placeholder = "2-factor authentication code"
+            textField.keyboardType = .numberPad
+        })
+        
+        // Two-factor action
+        let twoFactorAction = UIAlertAction(title: "Confirm", style: .default, handler: { (_) in
+            if let code = alert.textFields?.first?.text {
+                Paybear.shared.loginTwoFactor(code: code, completion: { (success) in
+                    if success {
+                        self.getUser()
+                        alert.dismiss(animated: true, completion: nil)
+                    } else {
+                        // Retry two-factor code
+                        self.networkingDidRequestTwoFactorAuthentication()
+                    }
+                })
+            }
+        })
+        
+        alert.addAction(twoFactorAction)
         
         DispatchQueue.main.async {
             self.present(alert, animated: true, completion: nil)
