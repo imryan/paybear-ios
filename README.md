@@ -55,9 +55,32 @@ Paybear.shared.createPaymentRequest(crypto: .btc, callbackURL: "http://ryans.onl
 
 #### Login a user
 ```swift
-Paybear.shared.login(email: "you@paybear.io", password: "password") { (token, error) in
+Paybear.shared.login(email: "you@paybear.io", password: "password", twoFactorDelegate: nil) { (token, error) in
     if let token = token, error == nil {
         // We can now make user-based requests with our stored token!
+    }
+}
+```
+
+#### Another way to login a user
+Utilize the `TwoFactorAuthProtocol` to receive a callback when a 2FA code is requested.
+
+```swift
+Paybear.shared.login(email: "you@paybear.io", password: "password", twoFactorDelegate: self) { (token, error) in
+    if let token = token, error == nil {
+        // We can now make user-based requests with our stored token!
+    }
+}
+```
+
+```swift
+func paybearDidRequestTwoFactorAuthentication() {
+    // Prompt for 2FA code here
+    
+    Paybear.shared.loginTwoFactor(code: "123456") { (success) in
+        if success {
+            // We have completed the login process
+        }
     }
 }
 ```
@@ -77,6 +100,15 @@ Paybear.shared.loginTwoFactor(code: "123456") { (success) in
 Paybear.shared.getUser(completion: { (user, error) in
     if let user = user, error == nil {
         // We've got a valid user object!
+    }
+})
+```
+
+#### Enable or disable a currency on the dashboard
+```swift
+Paybear.shared.enableCurrency(.btc, enable: true, address: "123", completion: { (success) in
+    if success {
+        // Enabled BTC with wallet address 123
     }
 })
 ```
