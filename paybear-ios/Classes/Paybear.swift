@@ -127,4 +127,17 @@ open class Paybear {
     open func getUser(completion: @escaping Callbacks.UserResult) {
         Networking.getUser(completion: completion)
     }
+    
+    /// Enable or disable a currency on the dashboard
+    ///
+    /// - Parameters:
+    ///   - crypto: Cryptocurrency type to enable/disable
+    ///   - enable: Should we enable to disable usage of the given currency
+    ///   - address: Optional payout address to add/update (needed for new enables with no existing address)
+    ///   - completion: A `Bool` indicating successful enable/disable
+    open func enableCurrency(_ crypto: PaybearCryptoCurrencyType, enable: Bool, address: String?,
+                             completion: @escaping Callbacks.EnableCurrencyResult) {
+        
+        Networking.enableCurrency(crypto.rawValue, enable: enable, address: address, completion: completion)
+    }
 }

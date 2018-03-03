@@ -190,7 +190,7 @@ class Networking {
                     if let jsonData = try? JSONSerialization.data(withJSONObject: data, options: []) {
                         if let user = try? JSONDecoder().decode(User.self, from: jsonData) {
                             user.wallets = wallets
-
+                            
                             // Assign/update current user
                             LoginHelper.shared.user = user
                             completion(user, nil)
@@ -202,21 +202,32 @@ class Networking {
         }
     }
     
-//    static func loginAndFetchUser() {
-//        login(email: "", password: "", twoFactorDelegate: nil) { (token, error) in
-//            guard let token = token, error == nil else { return }
-//
-//            loginTwoFactor(code: "", completion: { (success) in
-//                if success {
-//                    getUser(completion: { (user, error) in
-//                        guard let user = user, error == nil else { return }
-//
-//
-//                    })
-//                }
-//            })
-//        }
-//    }
+    static func enableCurrency(_ crypto: String, enable: Bool, address: String?, completion: @escaping Callbacks.EnableCurrencyResult) {
+        guard let token = LoginHelper.shared.token else { completion(false); return }
+        
+        let url = URL(string: "\(Constants.API_MEMBERS_BASE_URL)/user/chainSettings/\(crypto)")!
+        let headers = ["authorization" : "JWT \(token)"]
+        var parameters: [String : Any]
+        
+        if let address = address {
+            parameters = ["enabled" : enable, "current_payout" : address]
+        } else {
+            parameters = ["enabled" : enable]
+        }
+        
+        Alamofire.request(url, method: .put, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+            .response { (response) in
+                
+                if let statusCode = response.response?.statusCode {
+                    if statusCode == 200 || statusCode == 201 {
+                        completion(true)
+                        return
+                    }
+                }
+                
+                completion(false)
+        }
+    }
 }
 
 // MARK: - Request Helpers

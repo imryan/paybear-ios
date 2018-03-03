@@ -21,12 +21,15 @@ open class Callbacks {
     /// Returns a `PaymentRequest` objects and/or an `Error`
     public typealias GetPaymentRequest = (_ request: PaymentRequest?, _ error: Error?) -> Void
     
-    /// Returns a token following a login for use in all user-related requests.
+    /// Returns a token following a login for use in all user-related requests
     public typealias LoginTokenResult = (_ token: String?, _ error: Error?) -> Void
     
-    /// Returns a boolean indicating a successful two-factor authentication.
+    /// Returns a boolean indicating a successful two-factor authentication
     public typealias LoginTwoFactorResult = (_ success: Bool) -> Void
     
     /// Returns a `User` object and/or an `Error`
     public typealias UserResult = (_ user: User?, _ error: Error?) -> Void
+    
+    /// Returns a boolean indicating a successful currency enable/disable
+    public typealias EnableCurrencyResult = (_ success: Bool) -> Void
 }

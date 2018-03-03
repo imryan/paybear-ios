@@ -9,6 +9,9 @@ class Tests: QuickSpec {
         beforeEach {
             // Public token. Easy there wise guy
             Paybear.shared.setToken("pub9f2d5e3db59b6db40b57f83d9a33437f")
+            
+            // Set private token for testing user
+            // LoginHelper.shared.store(token: Secrets.token)
         }
         
         describe("fetch currencies") {
@@ -99,9 +102,6 @@ class Tests: QuickSpec {
             }
             
             describe("get a user") {
-                beforeSuite {
-                    
-                }
                 it("should get a user and their wallets") {
                     waitUntil(action: { (done) in
                         Paybear.shared.getUser(completion: { (user, error) in
@@ -112,6 +112,17 @@ class Tests: QuickSpec {
                                 expect(user.wallets.count).to(beGreaterThanOrEqualTo(7)) // Current supported currencies
                                 done()
                             }
+                        })
+                    })
+                }
+            }
+            
+            describe("enable or disable a currency") {
+                it("should enable a currency for us") {
+                    waitUntil(action: { (done) in
+                        Paybear.shared.enableCurrency(.btc, enable: false, address: "110bcB5fBCBeC94bb56D3A211bF7E6B89647a0D0", completion: { (success) in
+                            expect(success).to(beTrue())
+                            done()
                         })
                     })
                 }
