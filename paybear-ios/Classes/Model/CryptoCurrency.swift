@@ -21,12 +21,6 @@ open class CryptoCurrency: Codable {
     public let metamask: Bool?
     public let blockExplorer: String?
     
-    // TODO: Format wallet address string
-    // https://etherscan.io/address/%s
-    // let blockExplorerURL: String?
-    
-    // MARK: - CodingKeys
-    
     private enum CodingKeys: CodingKey {
         case title
         case code
@@ -37,5 +31,24 @@ open class CryptoCurrency: Codable {
         case maxConfirmations
         case metamask
         case blockExplorer
+    }
+}
+
+// MARK: - Extensions
+
+extension CryptoCurrency {
+    
+    public func blockExplorerURLString() -> String? {
+        guard let user = LoginHelper.shared.user,
+            let blockExplorer = blockExplorer,
+            let code = code else { return nil }
+        
+        if let wallet = user.wallets.filter({ $0.name?.uppercased() == code.uppercased() }).first,
+            let address = wallet.address {
+        
+            return blockExplorer.replacingOccurrences(of: "%s", with: address)
+        }
+        
+        return nil
     }
 }
