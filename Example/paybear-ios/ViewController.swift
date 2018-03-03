@@ -14,6 +14,7 @@ class ViewController: UIViewController {
     // MARK: Attributes
     
     @IBOutlet weak var tableView: UITableView!
+    
     private var refreshControl: UIRefreshControl!
     
     private var currencies: [CryptoCurrency] = [] {
@@ -23,6 +24,12 @@ class ViewController: UIViewController {
     }
     
     private var rates: [MarketRate] = [] {
+        didSet {
+            reloadTable()
+        }
+    }
+    
+    private var user: User? {
         didSet {
             reloadTable()
         }
@@ -46,6 +53,14 @@ class ViewController: UIViewController {
         }
     }
     
+    private func getUser() {
+        Paybear.shared.getUser(completion: { (user, error) in
+            if let user = user, error == nil {
+                self.user = user
+            }
+        })
+    }
+    
     private func createPaymentRequest() {
         Paybear.shared.createPaymentRequest(crypto: .btc, callbackURL: "http://ryans.online") { (request, error) in
             if let request = request, error == nil {
@@ -59,8 +74,54 @@ class ViewController: UIViewController {
         }
     }
     
-    private func login() {
-        let alert = UIAlertController(title: "PayBear", message: "Login with email and password", preferredStyle: .alert)
+    private func login(email: String, password: String) {
+        Paybear.shared.login(email: email, password: password, completion: { (token, error) in
+            let alert = UIAlertController(title: "Paybear", message: nil, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: nil))
+            
+            if let error = error {
+                // Display error and prompt retry
+                alert.message = "Error: \(error.localizedDescription)"
+                let retryAction = UIAlertAction(title: "Retry", style: .default, handler: { (_) in
+                    self.displayLoginAlert()
+                })
+                
+                alert.addAction(retryAction)
+            }
+            else if let _ = token {
+                // Enter Two-factor token
+                alert.addTextField(configurationHandler: { (textField) in
+                    textField.placeholder = "2-factor authentication code"
+                    textField.keyboardType = .numberPad
+                })
+                
+                // Two-factor action
+                let twoFactorAction = UIAlertAction(title: "Confirm", style: .default, handler: { (_) in
+                    if let code = alert.textFields?.first?.text {
+                        Paybear.shared.loginTwoFactor(code: code, completion: { (success) in
+                            if success {
+                                self.getUser()
+                                alert.dismiss(animated: true, completion: nil)
+                            } else {
+                                // Retry two-factor code
+                                self.login(email: email, password: password)
+                            }
+                        })
+                    }
+                })
+                
+                alert.addAction(twoFactorAction)
+            }
+            
+            DispatchQueue.main.async {
+                self.present(alert, animated: true, completion: nil)
+            }
+        })
+    }
+    
+    private func displayLoginAlert() {
+        let alert = UIAlertController(title: "Paybear", message: "Login with email and password", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         
         alert.addTextField { (textField) in
             textField.placeholder = "you@paybear.io"
@@ -74,40 +135,11 @@ class ViewController: UIViewController {
         
         let loginAction = UIAlertAction(title: "Login", style: .default) { _ in
             if let email = alert.textFields!.first?.text, let password = alert.textFields![1].text {
-                Paybear.shared.login(email: email, password: password, completion: { (token, error) in
-                    let loginAlert = UIAlertController(title: "PayBear", message: nil, preferredStyle: .alert)
-                    loginAlert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: nil))
-                    
-                    if let error = error {
-                        loginAlert.message = "Error: \(error.localizedDescription)"
-                    }
-                    else if let _ = token {
-                        // Enter 2-factor token
-                        loginAlert.addTextField(configurationHandler: { (textField) in
-                            textField.placeholder = "2-factor authentication code"
-                            textField.keyboardType = .numberPad
-                        })
-                        
-                        let twoFactorAction = UIAlertAction(title: "Confirm", style: .default, handler: { (_) in
-                            if let code = loginAlert.textFields?.first?.text {
-                                Paybear.shared.loginTwoFactor(code: code, completion: { (success) in
-                                    print(success ? "2-factor success!" : "2-factor failed!")
-                                })
-                            }
-                        })
-                        
-                        loginAlert.addAction(twoFactorAction)
-                    }
-                    
-                    DispatchQueue.main.async {
-                        self.present(loginAlert, animated: true, completion: nil)
-                    }
-                })
+                self.login(email: email, password: password)
             }
         }
         
         alert.addAction(loginAction)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         
         DispatchQueue.main.async {
             self.present(alert, animated: true, completion: nil)
@@ -130,7 +162,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         // Set API key and fetch data
-        Paybear.shared.setToken("")
+        Paybear.shared.setToken("pub9f2d5e3db59b6db40b57f83d9a33437f")
         fetchData()
         
         // Add refresh control
@@ -159,7 +191,9 @@ extension ViewController: UITableViewDelegate {
             createPaymentRequest()
             break
         case 3:
-            login()
+            if user == nil {
+                displayLoginAlert()
+            }
             break
         default:
             break
@@ -174,7 +208,7 @@ extension ViewController: UITableViewDelegate {
 extension ViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 4
+        return 5
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -186,7 +220,9 @@ extension ViewController: UITableViewDataSource {
         case 2:
             return 1
         case 3:
-            return 1
+            return (user != nil) ? 4 : 1
+        case 4:
+            return (user != nil) ? (user?.wallets.count)! : 0
         default:
             return 0
         }
@@ -195,13 +231,15 @@ extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0:
-            return "Currencies"
+            return currencies.count > 0 ? "Currencies" : nil
         case 1:
-            return "Rates"
+            return rates.count > 0 ? "Rates" : nil
         case 2:
             return "Payment"
         case 3:
             return "User"
+        case 4:
+            return "Wallets"
         default:
             return nil
         }
@@ -212,15 +250,17 @@ extension ViewController: UITableViewDataSource {
         
         if indexPath.section == 0 {
             let currency = currencies[indexPath.row]
-            cell.textLabel?.text = "\(currency.title!) (\(currency.code!))"
+            cell.textLabel?.text = "\(currency.title!) (\(currency.code!.uppercased()))"
             cell.detailTextLabel?.text = "$\(currency.rate!)"
             cell.accessoryType = .none
+            cell.selectionStyle = .none
         }
         else if indexPath.section == 1 {
             let rate = rates[indexPath.row]
-            cell.textLabel?.text = "\(rate.name ?? "N/A")"
+            cell.textLabel?.text = "\(rate.name?.uppercased() ?? "N/A")"
             cell.detailTextLabel?.text = "Bitfinex: $\(rate.bitfinex ?? 0.0)"
             cell.accessoryType = .none
+            cell.selectionStyle = .none
         }
         else if indexPath.section == 2 {
             cell.textLabel?.text = "Create Payment Request"
@@ -228,9 +268,43 @@ extension ViewController: UITableViewDataSource {
             cell.detailTextLabel?.text = ""
         }
         else if indexPath.section == 3 {
-            cell.textLabel?.text = "Login"
-            cell.accessoryType = .disclosureIndicator
-            cell.detailTextLabel?.text = ""
+            guard let user = user else {
+                cell.textLabel?.text = "Login"
+                cell.accessoryType = .disclosureIndicator
+                cell.detailTextLabel?.text = ""
+                return cell
+            }
+            
+            cell.accessoryType = .none
+            cell.selectionStyle = .none
+            
+            switch indexPath.row {
+            case 0:
+                cell.textLabel?.text = user.name
+                cell.detailTextLabel?.text = "Name"
+                break
+            case 1:
+                cell.textLabel?.text = user.email
+                cell.detailTextLabel?.text = "Email"
+                break
+            case 2:
+                cell.textLabel?.text = "\(user.state ?? "Somewhere"), \(user.country ?? "Somewhere")"
+                cell.detailTextLabel?.text = "Location"
+                break
+            case 3:
+                cell.textLabel?.text = user.lastIP
+                cell.detailTextLabel?.text = "Last IP"
+                break
+            default:
+                break
+            }
+        }
+        else if indexPath.section == 4 {
+            guard let user = user else { return cell }
+            
+            let wallet = user.wallets[indexPath.row]
+            cell.textLabel?.text = wallet.name?.uppercased()
+            cell.detailTextLabel?.text = "\(wallet.enabled! ? "Enabled" : "Disabled") | \(wallet.confirmations!) conf"
         }
         
         return cell
@@ -239,7 +313,7 @@ extension ViewController: UITableViewDataSource {
     private func reloadTable() {
         DispatchQueue.main.async {
             self.tableView.beginUpdates()
-            self.tableView.reloadSections(IndexSet.init(integersIn: 0...2), with: .automatic)
+            self.tableView.reloadSections(IndexSet.init(integersIn: 0...4), with: .automatic)
             self.tableView.endUpdates()
             
             self.refreshControl.endRefreshing()
