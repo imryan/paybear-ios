@@ -239,7 +239,7 @@ extension ViewController: UITableViewDataSource {
         case 3:
             return "User"
         case 4:
-            return "Wallets"
+            return (user != nil) ? "Wallets" : nil
         default:
             return nil
         }
