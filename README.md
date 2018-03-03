@@ -72,6 +72,15 @@ Paybear.shared.loginTwoFactor(code: "123456") { (success) in
 }
 ```
 
+#### Enable or disable a currency on the dashboard
+```swift
+Paybear.shared.enableCurrency(.btc, enable: true, address: "123", completion: { (success) in
+    if success {
+        // Enabled BTC with wallet address 123
+    }
+})
+```
+
 #### Get user properties
 ```swift
 Paybear.shared.getUser(completion: { (user, error) in
