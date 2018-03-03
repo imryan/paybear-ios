@@ -104,6 +104,29 @@ class Networking {
         }
     }
     
+    static func getPaymentRequestQR(crypto: String, amount: Double, address: String, message: String?, size: CGSize?,
+                                    completion: @escaping Callbacks.GetPaymentRequestQR) {
+        
+        let size = (size != nil) ? "\(String(describing: size!.width))x\(String(describing: size!.height))" : "180x180"
+        
+        var url = "ethereum:\(address)?amount=\(amount)"
+        if let message = message {
+            url.append("&message=\(message)")
+        }
+        
+        let url = "https://chart.googleapis.com/chart?chs=\(size)&cht=qr&chl=\(url)"
+        
+        Alamofire.request(url, method: .get).response { (response) in
+            if let data = response.data {
+                if let image = UIImage(data: data ) {
+                    completion(image)
+                }
+            }
+            
+            completion(nil)
+        }
+    }
+    
     // MARK: - User
     
     static func login(email: String, password: String, twoFactorDelegate: TwoFactorAuthProtocol?,
@@ -219,7 +242,7 @@ class Networking {
             .response { (response) in
                 
                 if let statusCode = response.response?.statusCode {
-                    if statusCode == 200 || statusCode == 201 {
+                    if statusCode == 200 {
                         completion(true)
                         return
                     }

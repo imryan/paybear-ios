@@ -95,6 +95,22 @@ open class Paybear {
         Networking.createPaymentRequest(crypto: crypto.rawValue, callbackURL: callbackURL, completion: completion)
     }
     
+    /// Get QR code image for payment request
+    ///
+    /// - Parameters:
+    ///   - crypto: Cryptocurrency to accept (eth, btc, bch, ltc, dash, btg, etc)
+    ///   - amount: Amount you're asking to be paid
+    ///   - address: The payout address for given crypto
+    ///   - message: Optional message
+    ///   - size: Optional image size. Default is 180x180
+    ///   - completion: `UIImage` representation of QR code
+    open func getPaymentRequestQR(crypto: PaybearCryptoCurrencyType, amount: Double, address: String,
+                                  message: String?, size: CGSize?, completion: @escaping Callbacks.GetPaymentRequestQR) {
+        
+        Networking.getPaymentRequestQR(crypto: crypto.rawValue, amount: amount, address: address,
+                                       message: message, size: size, completion: completion)
+    }
+    
     // MARK: - User
     
     /// Login
