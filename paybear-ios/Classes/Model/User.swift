@@ -11,13 +11,14 @@ open class User: Codable {
     
     // This class holds a reference to the currently authenticated user.
     
-    let id: String?
-    let name: String?
-    let email: String?
-    let country: String?
-    let state: String?
-    let lastIP: String?
-    let wallets: [Wallet]?
+    public let id: String?
+    public let name: String?
+    public let email: String?
+    public let country: String?
+    public let state: String?
+    public let lastIP: String?
+    
+    public var wallets: [Wallet] = []
     
     private enum CodingKeys: String, CodingKey {
         case name = "fullname"
@@ -26,6 +27,5 @@ open class User: Codable {
         case email
         case country
         case state
-        case wallets = "chain_settings"
     }
 }

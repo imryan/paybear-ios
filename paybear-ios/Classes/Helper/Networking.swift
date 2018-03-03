@@ -83,7 +83,7 @@ class Networking {
         
         let endpoint = "\(crypto)/payment/\(callbackURL)"
         get(endpoint) { (dict, error) in
-            guard let dict = dict as? Dictionary<String, String>, error == nil else {
+            guard let dict = dict as? [String : String], error == nil else {
                 completion(nil, error)
                 return
             }
@@ -107,25 +107,25 @@ class Networking {
         Alamofire.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: nil)
             .responseJSON { (data) in
                 
-            guard let json = data.value as? [String : Any] else { completion(nil, nil); return }
-            
-            if let success = json["success"] as? Bool {
-                if success {
-                    if let token = json["token"] as? String {
-                        // Store token for use in requests
-                        LoginHelper.shared.store(token: token)
-                        completion(token, nil)
-                        return
-                    }
-                } else {
-                    if let description = json["error"] as? String {
-                        completion(nil, error(description, code: -4))
-                        return
+                guard let json = data.value as? [String : Any] else { completion(nil, nil); return }
+                
+                if let success = json["success"] as? Bool {
+                    if success {
+                        if let token = json["token"] as? String {
+                            // Store token for use in requests
+                            LoginHelper.shared.store(token: token)
+                            completion(token, nil)
+                            return
+                        }
+                    } else {
+                        if let description = json["error"] as? String {
+                            completion(nil, error(description, code: -4))
+                            return
+                        }
                     }
                 }
-            }
-            
-            completion(nil, data.error)
+                
+                completion(nil, data.error)
         }
     }
     
@@ -139,16 +139,53 @@ class Networking {
         Alamofire.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
             .responseJSON { (data) in
                 
-            guard let json = data.value as? [String : Any] else { completion(false); return }
+                guard let json = data.value as? [String : Any] else { completion(false); return }
                 
-            if let success = json["success"] as? Bool, let data = json["data"] as? Bool {
-                if success && data {
-                    completion(true)
-                    return
+                if let success = json["success"] as? Bool, let data = json["data"] as? Bool {
+                    if success && data {
+                        completion(true)
+                        return
+                    }
                 }
-            }
-            
-            completion(false)
+                
+                completion(false)
+        }
+    }
+    
+    static func getUser(completion: @escaping Callbacks.UserResult) {
+        guard let token = LoginHelper.shared.token else { completion(nil, nil); return }
+        
+        let url = URL(string: "\(Constants.API_MEMBERS_BASE_URL)/user")!
+        let headers = ["authorization" : "JWT \(token)"]
+        
+        Alamofire.request(url, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers)
+            .responseJSON { (response) in
+                
+                guard let json = response.value as? [String : Any] else { completion(nil, nil); return }
+                
+                if let data = json["data"] as? [String : Any],
+                    let settings = data["chain_settings"] as? [String : Any] {
+                    var wallets: [Wallet] = []
+                    
+                    // Add all available cryptocurrencies
+                    settings.forEach({ (key, val) in
+                        let walletData = try? JSONSerialization.data(withJSONObject: val, options: [])
+                        if let wallet = try? JSONDecoder().decode(Wallet.self, from: walletData!) {
+                            wallet.name = key
+                            wallets.append(wallet)
+                        }
+                    })
+                    
+                    // Parse user object
+                    if let jsonData = try? JSONSerialization.data(withJSONObject: data, options: []) {
+                        if let user = try? JSONDecoder().decode(User.self, from: jsonData) {
+                            user.wallets = wallets
+                            completion(user, nil)
+                        }
+                    }
+                }
+                
+                completion(nil, response.error)
         }
     }
 }
@@ -175,18 +212,9 @@ extension Networking {
                 // Check for errors in response
                 if let error = error(inJSON: json) {
                     completion(nil, error)
-                }
-                
-                // Check data key for nested JSON 
-                if let dataContents = json["data"] as? [String : Any] {
+                    
+                } else if let dataContents = json["data"] as? [String : Any] {
                     completion(dataContents, nil)
-                    return
-                } else {
-                    // Non-nested JSON objects
-                    if let dataContents = json["data"] as? [String : String] {
-                        completion(dataContents, nil)
-                        return
-                    }
                 }
             case .failure(let error):
                 completion(nil, error)

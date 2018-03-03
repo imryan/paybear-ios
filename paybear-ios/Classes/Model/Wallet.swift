@@ -13,12 +13,12 @@ open class Wallet: Codable {
     
     // MARK: - Attributes
     
-    let name: String?
-    let address: String?
-    let enabled: Bool?
-    let feeLevel: String?
-    let confirmations: Int?
-    let defaultConfirmations: Int?
+    public var name: String?
+    public let address: String?
+    public let enabled: Bool?
+    public let feeLevel: String?
+    public let confirmations: Int?
+    public let defaultConfirmations: Int?
     
     private enum CodingKeys: String, CodingKey {
         case address = "current_payout"
