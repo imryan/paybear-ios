@@ -32,4 +32,7 @@ open class Callbacks {
     
     /// Returns a boolean indicating a successful currency enable/disable
     public typealias EnableCurrencyResult = (_ success: Bool) -> Void
+    
+    /// Returns a `UIImage` representation of a payment request QR code
+    public typealias GetPaymentRequestQR = (_ image: UIImage?) -> Void
 }
