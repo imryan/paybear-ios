@@ -11,7 +11,7 @@ import Alamofire
 public protocol TwoFactorAuthProtocol {
     
     /// Called by `twoFactorDelegate` after login to enter required 2FA code
-    func networkingDidRequestTwoFactorAuthentication()
+    func paybearDidRequestTwoFactorAuthentication()
 }
 
 class Networking {
@@ -122,7 +122,7 @@ class Networking {
                         if let token = json["token"] as? String {
                             // Store token for use in requests and notify listener of 2FA
                             LoginHelper.shared.store(token: token)
-                            twoFactorDelegate?.networkingDidRequestTwoFactorAuthentication()
+                            twoFactorDelegate?.paybearDidRequestTwoFactorAuthentication()
                             
                             completion(token, nil)
                             return

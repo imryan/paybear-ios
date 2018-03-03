@@ -126,7 +126,7 @@ class ViewController: UIViewController, TwoFactorAuthProtocol {
     
     // MARK: - TwoFactorAuthProtocol
     
-    func networkingDidRequestTwoFactorAuthentication() {
+    func paybearDidRequestTwoFactorAuthentication() {
         let alert = UIAlertController(title: "2FA", message: "Enter your 6 digit 2FA code", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         
@@ -145,7 +145,7 @@ class ViewController: UIViewController, TwoFactorAuthProtocol {
                         alert.dismiss(animated: true, completion: nil)
                     } else {
                         // Retry two-factor code
-                        self.networkingDidRequestTwoFactorAuthentication()
+                        self.paybearDidRequestTwoFactorAuthentication()
                     }
                 })
             }
