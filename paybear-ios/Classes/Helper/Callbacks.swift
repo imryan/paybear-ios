@@ -26,4 +26,7 @@ open class Callbacks {
     
     /// Returns a boolean indicating a successful two-factor authentication.
     public typealias LoginTwoFactorResult = (_ success: Bool) -> Void
+    
+    /// Returns a `User` object and/or an `Error`
+    public typealias UserResult = (_ user: User?, _ error: Error?) -> Void
 }

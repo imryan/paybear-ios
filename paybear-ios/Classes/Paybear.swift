@@ -107,4 +107,8 @@ open class Paybear {
     open func loginTwoFactor(code: String, completion: @escaping Callbacks.LoginTwoFactorResult) {
         Networking.loginTwoFactor(code: code, completion: completion)
     }
+    
+    open func getUser(completion: @escaping Callbacks.UserResult) {
+        Networking.getUser(completion: completion)
+    }
 }
