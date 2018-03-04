@@ -109,12 +109,12 @@ class Networking {
         
         let size = (size != nil) ? "\(String(describing: size!.width))x\(String(describing: size!.height))" : "180x180"
         
-        var url = "ethereum:\(address)?amount=\(amount)"
+        var paymentURL = "ethereum:\(address)?amount=\(amount)"
         if let message = message {
-            url.append("&message=\(message)")
+            paymentURL.append("&message=\(message)")
         }
         
-        let url = "https://chart.googleapis.com/chart?chs=\(size)&cht=qr&chl=\(url)"
+        let url = "https://chart.googleapis.com/chart?chs=\(size)&cht=qr&chl=\(paymentURL)"
         
         Alamofire.request(url, method: .get).response { (response) in
             if let data = response.data {

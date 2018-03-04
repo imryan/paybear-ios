@@ -156,4 +156,6 @@ open class Paybear {
         
         Networking.enableCurrency(crypto.rawValue, enable: enable, address: address, completion: completion)
     }
+    
+    // TODO: API keys
 }
