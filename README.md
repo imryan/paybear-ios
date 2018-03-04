@@ -53,6 +53,15 @@ Paybear.shared.createPaymentRequest(crypto: .btc, callbackURL: "http://ryans.onl
 }
 ```
 
+#### Create payment request as QR code image
+```swift
+Paybear.sharedgetPaymentRequestQR(crypto: .btc, amount: 1.0, address: "123", message: "Free money", size: nil) { (image) in
+    if let image = image {
+        // QR code image containing a payment URL
+    }
+}
+```
+
 #### Login a user
 ```swift
 Paybear.shared.login(email: "you@paybear.io", password: "password", twoFactorDelegate: nil) { (token, error) in
