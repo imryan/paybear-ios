@@ -1,5 +1,9 @@
 # 🐻 Paybear iOS
 
+## IMPORTANT
+
+* This pod will no longer function until support is built out for Savvy Wallet, Paybear v2.
+
 [![CI Status](http://img.shields.io/travis/imryan/paybear-ios.svg?style=flat)](https://travis-ci.org/imryan/paybear-ios)
 [![Version](https://img.shields.io/cocoapods/v/paybear-ios.svg?style=flat)](http://cocoapods.org/pods/paybear-ios)
 [![License](https://img.shields.io/cocoapods/l/paybear-ios.svg?style=flat)](http://cocoapods.org/pods/paybear-ios)
