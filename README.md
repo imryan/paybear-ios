@@ -8,7 +8,7 @@
 
 ## IMPORTANT
 
-* This pod will no longer function until support is built out for Savvy Wallet, Paybear v2
+* This pod has been deprecated. It has been continued [here](https://github.com/imryan/savvy-ios).
 
 ## Example
 
