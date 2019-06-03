@@ -6,7 +6,7 @@
 [![Platform](https://img.shields.io/cocoapods/p/paybear-ios.svg?style=flat)](http://cocoapods.org/pods/paybear-ios)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
-## IMPORTANT
+## ⚠️ IMPORTANT
 
 * This pod has been deprecated. It has been continued [here](https://github.com/imryan/savvy-ios).
 
